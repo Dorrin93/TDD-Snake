@@ -5,23 +5,23 @@ namespace Model
 {
 
 Grid::Grid(unsigned size):
-    m_rows(size), m_cols(size),
-    m_points(m_rows, m_cols, PointType::EMPTY)
+    m_cols(size), m_rows(size),
+    m_points(m_cols, m_rows, PointType::EMPTY)
 {}
 
-Grid::Grid(unsigned rows, unsigned cols):
-    m_rows(rows), m_cols(cols),
-    m_points(m_rows, m_cols, PointType::EMPTY)
+Grid::Grid(unsigned cols, unsigned rows):
+    m_cols(cols), m_rows(rows),
+    m_points(m_cols, m_rows, PointType::EMPTY)
 {}
 
-void Grid::setPointType(size_t x, size_t y, PointType type)
+void Grid::setPointType(const Point &p, PointType type)
 {
-    m_points.get(x, y) = type;
+    m_points.get(p.x, p.y) = type;
 }
 
-PointType Grid::getPointType(size_t x, size_t y) const
+PointType Grid::getPointType(const Point &p) const
 {
-    return m_points.get(x, y);
+    return m_points.get(p.x, p.y);
 }
 
 }

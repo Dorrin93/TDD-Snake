@@ -8,9 +8,10 @@ int main(int argc, char *argv[])
 {
     static_assert(GameContants::FIELD_SIZE > 10, "FIELD_SIZE must be 10 pixels or more");
 
-    Model::Grid grid(GameContants::ROWS, GameContants::COLS);
-    Model::Snake snake({GameContants::ROWS/2, GameContants::COLS/2});
-    Model::Game game(grid, snake);
+    Model::Grid grid(GameContants::COLS, GameContants::ROWS);
+    Model::Snake snake({GameContants::COLS/2, GameContants::ROWS/2});
+    Model::PointGenerator generator(GameContants::COLS-1, GameContants::ROWS-1);
+    Model::Game game(grid, snake, generator);
 
     Controller::GameController controller(game);
 

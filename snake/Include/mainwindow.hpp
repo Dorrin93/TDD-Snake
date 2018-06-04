@@ -33,6 +33,7 @@ signals:
 
 private:
     void drawGrid();
+    void drawWalls();
     void keyPressEvent(QKeyEvent* event);
 
     Ui::MainWindow *ui;

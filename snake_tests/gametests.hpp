@@ -4,6 +4,7 @@
 #include "game.hpp"
 #include "gridmock.hpp"
 #include "snakemock.hpp"
+#include "pointgeneratormock.hpp"
 
 using namespace testing;
 using namespace Model;
@@ -16,25 +17,40 @@ public:
         EXPECT_CALL(m_gridMock, rows()).WillRepeatedly(Return(ROWS));
         EXPECT_CALL(m_gridMock, cols()).WillRepeatedly(Return(COLS));
 
-        m_objectUnderTest = std::make_unique<Game>(m_gridMock, m_snakeMock);
+        m_objectUnderTest = std::make_unique<Game>(m_gridMock, m_snakeMock,
+                                                   m_generatorMock);
     }
 
-    void setExpectationsForInit()
+    void setDefaultExpectationsForInit()
     {
         EXPECT_CALL(m_snakeMock, head()).WillRepeatedly(ReturnRef(INITIAL_HEAD));
-        EXPECT_CALL(m_gridMock, setPointType(ROWS/2, COLS/2, PointType::SNAKE));
+        EXPECT_CALL(m_gridMock, setPointType(INITIAL_HEAD, PointType::SNAKE));
+        EXPECT_CALL(m_generatorMock, getRandomPoint()).WillRepeatedly(Return(BORDER_DOWN_LEFT));
+    }
+
+    void setDefaultExpectationsForNextStep()
+    {
+        EXPECT_CALL(m_snakeMock, setDirection(Direction::RIGHT));
+        EXPECT_CALL(m_snakeMock, tail()).WillRepeatedly(ReturnRef(INITIAL_HEAD));
+        EXPECT_CALL(m_snakeMock, move(BORDER_DOWN_LEFT)).
+                WillRepeatedly(ReturnRef(HEAD_AFTER_MOVE));
+        EXPECT_CALL(m_gridMock, setPointType(INITIAL_HEAD, PointType::EMPTY)).
+                Times(AtLeast(0));
+        EXPECT_CALL(m_gridMock, setPointType(HEAD_AFTER_MOVE, PointType::SNAKE)).
+                Times(AtLeast(0));
     }
 
 protected:
-    const size_t ROWS = 6;
-    const size_t COLS = 8;
-    Point INITIAL_HEAD{static_cast<int>(ROWS)/2,
-                       static_cast<int>(COLS)/2};
-    Point BORDER_DOWN_LEFT{static_cast<int>(ROWS)-1, 0};
-    Point BORDER_UP_RIGHT{0, static_cast<int>(COLS)-1};
+    const int COLS = 8;
+    const int ROWS = 6;
+    Point INITIAL_HEAD{ COLS/2, ROWS/2 };
+    Point HEAD_AFTER_MOVE { COLS/2+1, ROWS/2 };
+    Point BORDER_DOWN_LEFT{ 0, ROWS-1 };
+    Point BORDER_UP_RIGHT{ COLS-1, 0 };
 
     NiceMock<GridMock> m_gridMock;
     StrictMock<SnakeMock> m_snakeMock;
+    StrictMock<PointGeneratorMock> m_generatorMock;
 
     std::unique_ptr<Game> m_objectUnderTest;
 };
@@ -42,55 +58,34 @@ protected:
 
 TEST_F(GameTest, shouldPutSnakeInTheMiddleWhenInitialized)
 {
-    setExpectationsForInit();
-
+    setDefaultExpectationsForInit();
     m_objectUnderTest->init();
-}
-
-TEST_F(GameTest, shouldPutBonusNotInTheMiddleWhenInitialized)
-{
-    setExpectationsForInit();
-
-    m_objectUnderTest->init();
-
-    auto bonus = m_objectUnderTest->getBonusPlacement();
-    ASSERT_FALSE(static_cast<size_t>(bonus.x) == ROWS/2 and
-                 static_cast<size_t>(bonus.y) == COLS/2);
 }
 
 TEST_F(GameTest, shouldSimplyMoveSnakeRightWhenNextStepCalled)
 {
-    setExpectationsForInit();
-
+    setDefaultExpectationsForInit();
     m_objectUnderTest->init();
-    m_objectUnderTest->setBonusPlacement(BORDER_DOWN_LEFT.x, BORDER_DOWN_LEFT.y);
 
-    Point headNow = INITIAL_HEAD;
-    ++headNow.y;
-
-    EXPECT_CALL(m_snakeMock, tail()).WillOnce(ReturnRef(INITIAL_HEAD));
-    EXPECT_CALL(m_snakeMock, move(BORDER_DOWN_LEFT)).WillOnce(ReturnRef(headNow));
-
-    EXPECT_CALL(m_gridMock, setPointType(INITIAL_HEAD.x, INITIAL_HEAD.y, PointType::EMPTY));
-    EXPECT_CALL(m_gridMock, setPointType(headNow.x, headNow.y, PointType::SNAKE));
-
+    setDefaultExpectationsForNextStep();
     m_objectUnderTest->nextStep();
 
-    ASSERT_EQ(m_objectUnderTest->getHeadNowPlacement(), headNow);
+    ASSERT_EQ(m_objectUnderTest->getHeadNowPlacement(), HEAD_AFTER_MOVE);
     ASSERT_EQ(m_objectUnderTest->getTailBeforePlacement(), INITIAL_HEAD);
 }
 
 TEST_F(GameTest, shouldReturnFalseWhenSnakeHitWallRight)
 {
-    EXPECT_CALL(m_gridMock, setPointType(BORDER_UP_RIGHT.x, BORDER_UP_RIGHT.y, PointType::SNAKE));
+    // Custom expectations for init, head right next to wall
+    EXPECT_CALL(m_generatorMock, getRandomPoint()).WillRepeatedly(Return(BORDER_DOWN_LEFT));
     EXPECT_CALL(m_snakeMock, head()).WillOnce(ReturnRef(BORDER_UP_RIGHT));
+    EXPECT_CALL(m_gridMock, setPointType(BORDER_UP_RIGHT, PointType::SNAKE));
     m_objectUnderTest->init();
-    m_objectUnderTest->setBonusPlacement(BORDER_DOWN_LEFT.x, BORDER_DOWN_LEFT.y);
 
     Point headNow = BORDER_UP_RIGHT;
-    ++headNow.y;
-
-    EXPECT_CALL(m_snakeMock, tail()).WillOnce(ReturnRef(BORDER_UP_RIGHT));
+    ++headNow.x;
+    setDefaultExpectationsForNextStep();
+    //Head "inside" wall
     EXPECT_CALL(m_snakeMock, move(BORDER_DOWN_LEFT)).WillOnce(ReturnRef(headNow));
 
     ASSERT_FALSE(m_objectUnderTest->nextStep());
@@ -98,17 +93,28 @@ TEST_F(GameTest, shouldReturnFalseWhenSnakeHitWallRight)
 
 TEST_F(GameTest, shouldEnlargeWhenBonusEaten)
 {
-    setExpectationsForInit();
+    setDefaultExpectationsForInit();
+    EXPECT_CALL(m_generatorMock, getRandomPoint()).WillOnce(Return(HEAD_AFTER_MOVE));
 
     m_objectUnderTest->init();
-    m_objectUnderTest->setBonusPlacement(INITIAL_HEAD.x+1, INITIAL_HEAD.y);
 
-    Point headNow = INITIAL_HEAD;
-    ++headNow.x;
+    setDefaultExpectationsForNextStep();
     EXPECT_CALL(m_snakeMock, tail()).WillOnce(ReturnRef(INITIAL_HEAD));
     EXPECT_CALL(m_snakeMock, move(m_objectUnderTest->getBonusPlacement())).
-            WillOnce(ReturnRef(headNow));
-    EXPECT_CALL(m_gridMock, setPointType(INITIAL_HEAD.x+1, INITIAL_HEAD.y, PointType::SNAKE));
+            WillOnce(ReturnRef(HEAD_AFTER_MOVE));
+    EXPECT_CALL(m_gridMock, setPointType(HEAD_AFTER_MOVE, PointType::SNAKE));
+    EXPECT_CALL(m_generatorMock, getRandomPoint()).WillOnce(Return(BORDER_DOWN_LEFT));
 
-    m_objectUnderTest->nextStep();
+    ASSERT_TRUE(m_objectUnderTest->nextStep());
+}
+
+TEST_F(GameTest, shouldReturnFalseWhenSnakeHitItself)
+{
+    setDefaultExpectationsForInit();
+    m_objectUnderTest->init();
+
+    setDefaultExpectationsForNextStep();
+    EXPECT_CALL(m_gridMock, getPointType(HEAD_AFTER_MOVE)).WillOnce(Return(PointType::SNAKE));
+
+    ASSERT_FALSE(m_objectUnderTest->nextStep());
 }

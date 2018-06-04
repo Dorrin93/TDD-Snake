@@ -17,12 +17,13 @@ MainWindow::MainWindow(Model::Game& game, QWidget *parent) :
 
     constexpr unsigned MAIN_WINDOW_OFFSET = 50;
 
-    this->setFixedSize(FULL_ROW_SIZE + MAIN_WINDOW_OFFSET,
-                       FULL_COLS_SIZE + MAIN_WINDOW_OFFSET);
+    this->setFixedSize(FULL_COLS_SIZE + MAIN_WINDOW_OFFSET,
+                       FULL_ROW_SIZE + MAIN_WINDOW_OFFSET);
 
-    ui->graphicsView->setFixedSize(FULL_ROW_SIZE,
-                                   FULL_COLS_SIZE);
+    ui->graphicsView->setFixedSize(FULL_COLS_SIZE,
+                                   FULL_ROW_SIZE);
 
+    drawWalls();
     if(GameContants::DRAW_GRID)
     {
         drawGrid();
@@ -62,15 +63,25 @@ void MainWindow::redraw()
 
 void MainWindow::drawGrid()
 {
-    for(unsigned x = FIELD_SIZE; x < FULL_ROW_SIZE; x += FIELD_SIZE)
+    for(unsigned x = FIELD_SIZE; x < FULL_COLS_SIZE; x += FIELD_SIZE)
     {
-        m_scene.addLine(x, 2, x, FULL_ROW_SIZE-2, QPen(Qt::black));
+        m_scene.addLine(x, 1, x, FULL_ROW_SIZE-2, QPen(Qt::black));
     }
 
-    for(unsigned y = FIELD_SIZE; y < FULL_COLS_SIZE; y += FIELD_SIZE)
+    for(unsigned y = FIELD_SIZE; y < FULL_ROW_SIZE; y += FIELD_SIZE)
     {
-        m_scene.addLine(2, y, FULL_COLS_SIZE-2, y, QPen(Qt::black));
+        m_scene.addLine(1, y, FULL_COLS_SIZE-2, y, QPen(Qt::black));
     }
+}
+
+void MainWindow::drawWalls()
+{
+   m_scene.addLine(1, 1, 1, FULL_ROW_SIZE-2, QPen(Qt::black));
+   m_scene.addLine(1, 1, FULL_COLS_SIZE-2, 1, QPen(Qt::black));
+   m_scene.addLine(1, FULL_ROW_SIZE-2, FULL_COLS_SIZE-2,
+                   FULL_ROW_SIZE-2, QPen(Qt::black));
+   m_scene.addLine(FULL_COLS_SIZE-2, 1, FULL_COLS_SIZE-2,
+                   FULL_ROW_SIZE-2, QPen(Qt::black));
 }
 
 void MainWindow::keyPressEvent(QKeyEvent* event)

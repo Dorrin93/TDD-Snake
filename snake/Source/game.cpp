@@ -1,39 +1,38 @@
 #include "game.hpp"
-#include <chrono>
 #include <iostream>
 
 namespace Model
 {
 
-Game::Game(IGrid &grid, ISnake &snake):
+Game::Game(IGrid &grid, ISnake &snake,
+           IPointGenrator &generator):
     m_grid(grid), m_snake(snake),
-    m_rowGenerator(0, m_grid.rows()-1),
-    m_colGenerator(0, m_grid.cols()-1)
-{
-}
+    m_generator(generator)
+{}
 
 void Game::init()
 {
-    const auto& head = m_snake.head();
-    m_grid.setPointType(head.x, head.y, PointType::SNAKE);
-    m_headNow = head;
+    m_headNow = m_snake.head();
+    m_grid.setPointType(m_headNow, PointType::SNAKE);
     rollNewBonus();
 }
 
 // TODO split / refactor
 bool Game::nextStep()
 {
+    m_snake.setDirection(m_bufferedDirection);
     m_tailBefore = m_snake.tail();
     m_headNow = m_snake.move(m_bonus);
 
-    if(m_headNow.x >= m_grid.cols() or m_headNow.x < 0 or
-       m_headNow.y >= m_grid.rows() or m_headNow.y < 0 or
-       m_grid.getPointType(m_headNow.x, m_headNow.y) == PointType::SNAKE)
+    if(static_cast<size_t>(m_headNow.x) >= m_grid.cols() or m_headNow.x < 0 or
+       static_cast<size_t>(m_headNow.y) >= m_grid.rows() or m_headNow.y < 0 or
+       (m_grid.getPointType(m_headNow) == PointType::SNAKE and
+        m_headNow != m_tailBefore))
     {
         return false;
     }
 
-    m_grid.setPointType(m_headNow.x, m_headNow.y, PointType::SNAKE);
+    m_grid.setPointType(m_headNow, PointType::SNAKE);
 
     if(m_headNow == m_bonus)
     {
@@ -42,7 +41,7 @@ bool Game::nextStep()
     }
     else
     {
-        m_grid.setPointType(m_tailBefore.x, m_tailBefore.y, PointType::EMPTY);
+        m_grid.setPointType(m_tailBefore, PointType::EMPTY);
     }
 
 
@@ -51,31 +50,19 @@ bool Game::nextStep()
 
 void Game::changeDirection(Direction d)
 {
-    m_snake.setDirection(d);
+    m_bufferedDirection = d;
 }
 
 void Game::rollNewBonus()
 {
-    auto row = m_rowGenerator(getGenerator());
-    auto col = m_colGenerator(getGenerator());
+    auto point = m_generator.getRandomPoint();
 
-    while(m_grid.getPointType(row, col) != PointType::EMPTY)
+    while(m_grid.getPointType(point) != PointType::EMPTY)
     {
-        row = m_rowGenerator(getGenerator());
-        col = m_colGenerator(getGenerator());
+        point = m_generator.getRandomPoint();
     }
 
-    m_bonus.x = row;
-    m_bonus.y = col;
-}
-
-std::mt19937& Game::getGenerator()
-{
-    const static auto seed =
-            std::chrono::system_clock::now().time_since_epoch().count();
-    static std::mt19937 generator(seed);
-
-    return generator;
+    m_bonus = point;
 }
 
 }

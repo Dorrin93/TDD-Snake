@@ -16,7 +16,8 @@ HEADERS += \
     gametests.hpp \
     Mocks/gridmock.hpp \
     snaketests.hpp \
-    Mocks/snakemock.hpp
+    Mocks/snakemock.hpp \
+    Mocks/pointgeneratormock.hpp
 
 SOURCES += \
         *.cpp \

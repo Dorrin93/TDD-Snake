@@ -25,8 +25,8 @@ void GameController::update()
         std::cout << "END" << std::endl;
         return;
     }
-    const auto point = m_game.getHeadNowPlacement();
-    std::cout << point.x << " " << point.y << std::endl;
+    //const auto point = m_game.getHeadNowPlacement();
+    //std::cout << point.x << " " << point.y << std::endl;
 
     emit updateDone();
 }

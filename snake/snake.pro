@@ -30,7 +30,8 @@ SOURCES += \
     Source/gamecontroller.cpp \
     Source/grid.cpp \
     Source/mainwindow.cpp \
-    Source/snake.cpp
+    Source/snake.cpp \
+    Source/pointgenerator.cpp
 
 HEADERS += \
     Include/constants.hpp \
@@ -40,7 +41,8 @@ HEADERS += \
     Include/grid.hpp \
     Include/mainwindow.hpp \
     Include/snake.hpp \
-    Include/point.hpp
+    Include/point.hpp \
+    Include/pointgenerator.hpp
 
 FORMS += \
     mainwindow.ui

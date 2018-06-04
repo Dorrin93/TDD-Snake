@@ -2,6 +2,7 @@
 #include <map>
 #include <cmath>
 #include "flattenvector.hpp"
+#include "point.hpp"
 
 namespace Model
 {
@@ -13,9 +14,9 @@ class IGrid
 public:
     virtual ~IGrid(){}
 
-    virtual void setPointType(size_t x, size_t y, PointType type) = 0;
+    virtual void setPointType(const Point& p, PointType type) = 0;
 
-    virtual PointType getPointType(size_t x, size_t y) const = 0;
+    virtual PointType getPointType(const Point& p) const = 0;
 
     virtual size_t rows() const = 0;
     virtual size_t cols() const = 0;
@@ -26,18 +27,18 @@ class Grid : public IGrid
 public:
     Grid(size_t size);
 
-    Grid(size_t rows, size_t cols);
+    Grid(size_t cols, size_t rows);
 
-    void setPointType(size_t x, size_t y, PointType type) override;
+    void setPointType(const Point& p, PointType type) override;
 
-    PointType getPointType(size_t x, size_t y) const override;
+    PointType getPointType(const Point& p) const override;
 
     size_t rows() const override { return m_rows; }
     size_t cols() const override { return m_cols; }
 
 private:
-    const size_t m_rows;
     const size_t m_cols;
+    const size_t m_rows;
     FlattenVector<PointType> m_points;
 };
 

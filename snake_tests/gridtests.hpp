@@ -10,7 +10,7 @@ class GridTest: public Test
 {
 public:
     GridTest():
-        m_objectUnderTest(ROWS, COLS)
+        m_objectUnderTest(COLS, ROWS)
     {}
 
 protected:
@@ -23,7 +23,7 @@ class GridTestPointParam : public GridTest,
                            public WithParamInterface<Point>
 {};
 
-TEST_F(GridTest, shouldCreateGridWith3Rows2Cols)
+TEST_F(GridTest, shouldCreateGridWith2ColsAnd3Rows)
 {
     ASSERT_EQ(ROWS, m_objectUnderTest.rows());
     ASSERT_EQ(COLS, m_objectUnderTest.cols());
@@ -32,21 +32,21 @@ TEST_F(GridTest, shouldCreateGridWith3Rows2Cols)
 TEST_P(GridTestPointParam, shouldBeEmptyByDefault)
 {
     const auto point = GetParam();
-    ASSERT_EQ(PointType::EMPTY, m_objectUnderTest.getPointType(point.x, point.y));
+    ASSERT_EQ(PointType::EMPTY, m_objectUnderTest.getPointType(point));
 }
 
 INSTANTIATE_TEST_CASE_P(AllPoints,
                         GridTestPointParam,
-                        Values(Point{0, 0}, Point{0, 1},
-                               Point{1, 0}, Point{1, 1},
-                               Point{2, 0}, Point{2, 1}));
+                        Values(Point{0, 0}, Point{1, 0},
+                               Point{0, 1}, Point{1, 1},
+                               Point{0, 2}, Point{1, 2}));
 
 TEST_F(GridTest, shouldPutSnake)
 {
-    m_objectUnderTest.setPointType(1, 0, PointType::SNAKE);
+    m_objectUnderTest.setPointType(Point{1, 0}, PointType::SNAKE);
 
-    ASSERT_EQ(PointType::SNAKE, m_objectUnderTest.getPointType(1, 0));
-    ASSERT_NE(PointType::SNAKE, m_objectUnderTest.getPointType(0, 1));
+    ASSERT_EQ(PointType::SNAKE, m_objectUnderTest.getPointType(Point{1, 0}));
+    ASSERT_NE(PointType::SNAKE, m_objectUnderTest.getPointType(Point{0, 1}));
 }
 
 
@@ -57,19 +57,19 @@ class GridTestOutOfBoundParam : public GridTest,
 TEST_P(GridTestOutOfBoundParam, shouldNotSetPointOutOfBounds)
 {
     const auto point = GetParam();
-    ASSERT_THROW(m_objectUnderTest.setPointType(point.x, point.y, PointType::SNAKE),
+    ASSERT_THROW(m_objectUnderTest.setPointType(point, PointType::SNAKE),
                  std::out_of_range);
 }
 
 TEST_P(GridTestOutOfBoundParam, shouldNotGetPointOutOfBounds)
 {
     const auto point = GetParam();
-    ASSERT_THROW(m_objectUnderTest.getPointType(point.x, point.y),
+    ASSERT_THROW(m_objectUnderTest.getPointType(point),
                  std::out_of_range);
 }
 
 INSTANTIATE_TEST_CASE_P(OutOfBoundPoints,
                         GridTestOutOfBoundParam,
-                        Values(Point{3, 0}, Point{3, 1},
-                               Point{3, 2}, Point{0, 2},
-                               Point{1, 2}, Point{2, 2}));
+                        Values(Point{2, 0}, Point{0, 3},
+                               Point{2, 1}, Point{1, 3},
+                               Point{2, 3}, Point{2, 3}));

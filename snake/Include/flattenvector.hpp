@@ -8,14 +8,14 @@ template<typename T>
 class FlattenVector
 {
 public:
-    FlattenVector(unsigned rows, unsigned cols, const T& initialValue):
-        m_rows(rows), m_cols(cols),
+    FlattenVector(unsigned cols, unsigned rows, const T& initialValue):
+        m_cols(cols), m_rows(rows),
         m_values(m_rows*m_cols, initialValue)
     {}
 
     T& get(size_t x, size_t y)
     {
-        if(x >= m_rows or y >= m_cols)
+        if(x >= m_cols or y >= m_rows)
         {
             throw std::out_of_range("FlattenVector::get");
         }
@@ -24,7 +24,7 @@ public:
 
     const T& get(size_t x, size_t y) const
     {
-        if(x >= m_rows or y >= m_cols)
+        if(x >= m_cols or y >= m_rows)
         {
             throw std::out_of_range("FlattenVector::get");
         }
@@ -32,8 +32,8 @@ public:
     }
 
 private:
-    const size_t m_rows;
     const size_t m_cols;
+    const size_t m_rows;
     std::vector<T> m_values;
 };
 
