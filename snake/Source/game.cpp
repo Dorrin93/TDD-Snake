@@ -20,6 +20,7 @@ void Game::init()
     rollNewBonus();
 }
 
+// TODO split / refactor
 bool Game::nextStep()
 {
     m_tailBefore = m_snake.tail();
