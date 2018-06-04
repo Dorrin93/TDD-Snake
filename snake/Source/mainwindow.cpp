@@ -36,6 +36,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// TODO Split and refactor
 void MainWindow::redraw()
 {
     const qreal delta = FIELD_SIZE / 5.;
