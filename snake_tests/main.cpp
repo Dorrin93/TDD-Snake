@@ -1,5 +1,6 @@
 #include "gridtests.hpp"
 #include "gametests.hpp"
+#include "snaketests.hpp"
 
 #include <gtest/gtest.h>
 

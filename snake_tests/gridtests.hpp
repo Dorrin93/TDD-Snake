@@ -1,15 +1,10 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock-matchers.h>
 #include "grid.hpp"
+#include "point.hpp"
 
 using namespace testing;
 using namespace Model;
-
-struct Point
-{
-   size_t x;
-   size_t y;
-};
 
 class GridTest: public Test
 {
@@ -52,13 +47,6 @@ TEST_F(GridTest, shouldPutSnake)
 
     ASSERT_EQ(PointType::SNAKE, m_objectUnderTest.getPointType(1, 0));
     ASSERT_NE(PointType::SNAKE, m_objectUnderTest.getPointType(0, 1));
-}
-
-TEST_F(GridTest, shouldPutBonus)
-{
-    m_objectUnderTest.setPointType(2, 0, PointType::BONUS);
-
-    ASSERT_EQ(PointType::BONUS, m_objectUnderTest.getPointType(2, 0));
 }
 
 

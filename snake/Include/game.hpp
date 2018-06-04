@@ -1,7 +1,8 @@
 #pragma once
 #include <random>
 #include "grid.hpp"
-#include "constants.hpp"
+#include "snake.hpp"
+#include "point.hpp"
 
 namespace Model
 {
@@ -9,21 +10,36 @@ namespace Model
 class Game
 {
 public:
-    Game(IGrid& grid): m_grid(grid),
-        m_rd(), m_gen(m_rd()),
-        m_rowGenerator(0, m_grid.rows()),
-        m_colGenerator(0, m_grid.cols())
-    {}
+    explicit Game(IGrid& grid, ISnake& snake);
 
     void init();
+    bool nextStep();
+    void changeDirection(Direction d);
+
+    const Point& getBonusPlacement()      const { return m_bonus; }
+    const Point& getHeadNowPlacement()    const { return m_headNow; }
+    const Point& getTailBeforePlacement() const { return m_tailBefore; }
+
+    // ONLY FOR TESTING PURPOSE //
+    // TODO resolve by creating and
+    //  mocking random generator
+    void setBonusPlacement(int x, int y)
+    {
+        m_bonus.x = x;
+        m_bonus.y = y;
+    }
+    // ONLY FOR TESTING PURPOSE //
 
 private:
+    static std::mt19937& getGenerator();
     void rollNewBonus();
 
     IGrid& m_grid;
+    ISnake& m_snake;
+    Point m_bonus{0, 0};
+    Point m_headNow{0, 0};
+    Point m_tailBefore{0, 0};
 
-    std::random_device m_rd;
-    std::mt19937 m_gen;
     std::uniform_int_distribution<size_t> m_rowGenerator;
     std::uniform_int_distribution<size_t> m_colGenerator;
 };

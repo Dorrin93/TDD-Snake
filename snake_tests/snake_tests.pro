@@ -14,9 +14,12 @@ VPATH += ../snake/Source Mocks
 HEADERS += \
     gridtests.hpp \
     gametests.hpp \
-    Mocks/gridmock.hpp
+    Mocks/gridmock.hpp \
+    snaketests.hpp \
+    Mocks/snakemock.hpp
 
 SOURCES += \
         *.cpp \
         ../snake/Source/grid.cpp \
-        ../snake/Source/game.cpp
+        ../snake/Source/game.cpp \
+        ../snake/Source/snake.cpp

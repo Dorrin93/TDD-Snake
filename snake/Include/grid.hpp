@@ -6,7 +6,7 @@
 namespace Model
 {
 
-enum class PointType{ EMPTY, SNAKE, BONUS };
+enum class PointType{ EMPTY, SNAKE };
 
 class IGrid
 {

@@ -24,23 +24,23 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 INCLUDEPATH += Include
 
-VPATH += \
-        Include \
-        Source
-
-
 SOURCES += \
-        main.cpp \
-        mainwindow.cpp \
-        grid.cpp \
-    Source/game.cpp
+    main.cpp \
+    Source/game.cpp \
+    Source/gamecontroller.cpp \
+    Source/grid.cpp \
+    Source/mainwindow.cpp \
+    Source/snake.cpp
 
 HEADERS += \
-    mainwindow.hpp \
-    grid.hpp \
     Include/constants.hpp \
     Include/flattenvector.hpp \
-    Include/game.hpp
+    Include/game.hpp \
+    Include/gamecontroller.hpp \
+    Include/grid.hpp \
+    Include/mainwindow.hpp \
+    Include/snake.hpp \
+    Include/point.hpp
 
 FORMS += \
-        mainwindow.ui
+    mainwindow.ui

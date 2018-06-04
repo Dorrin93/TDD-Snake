@@ -1,8 +1,18 @@
 #pragma once
+#include <cstddef>
 
-constexpr unsigned ROWS = 20;
-constexpr unsigned COLS = 20;
-constexpr unsigned FIELD_SIZE = 30;
+namespace GameContants
+{
 
-constexpr unsigned FULL_ROW_SIZE = ROWS*FIELD_SIZE;
-constexpr unsigned FULL_COLS_SIZE = COLS * FIELD_SIZE;
+constexpr size_t ROWS = 10;
+constexpr size_t COLS = 10;
+constexpr size_t FIELD_SIZE = 50;
+
+constexpr size_t FULL_ROW_SIZE = ROWS*FIELD_SIZE;
+constexpr size_t FULL_COLS_SIZE = COLS*FIELD_SIZE;
+
+constexpr unsigned TIMEOUT = 300;
+
+constexpr bool DRAW_GRID = true;
+
+}
