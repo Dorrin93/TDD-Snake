@@ -13,6 +13,6 @@ constexpr size_t FULL_COLS_SIZE = COLS*FIELD_SIZE;
 
 constexpr unsigned TIMEOUT = 300;
 
-constexpr bool DRAW_GRID = false;
+constexpr bool DRAW_GRID = true;
 
 }

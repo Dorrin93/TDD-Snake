@@ -32,6 +32,7 @@ signals:
     void directionChanged(Model::Direction);
 
 private:
+    void drawHead(const Model::Point&);
     void drawGrid();
     void drawWalls();
     void keyPressEvent(QKeyEvent* event);
@@ -40,7 +41,8 @@ private:
     QGraphicsScene m_scene;
     Model::Game& m_game;
 
-
+    static const qreal delta;
+    static const qreal size;
 };
 
 #endif // MAINWINDOW_H

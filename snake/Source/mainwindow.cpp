@@ -6,6 +6,9 @@
 
 using namespace GameContants;
 
+const qreal MainWindow::delta = FIELD_SIZE / 5.;
+const qreal MainWindow::size = FIELD_SIZE - delta;
+
 MainWindow::MainWindow(Model::Game& game, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -37,28 +40,90 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-// TODO Split and refactor
 void MainWindow::redraw()
 {
-    const qreal delta = FIELD_SIZE / 5.;
-    const qreal size = FIELD_SIZE - delta;
-    const auto bonus = m_game.getBonusPlacement();
+    const auto& bonus = m_game.getBonusPlacement();
 
     m_scene.addEllipse(FIELD_SIZE*bonus.x + delta/2, FIELD_SIZE*bonus.y + delta/2,
-                       size, size, QPen(Qt::black), QBrush(Qt::green));
-
-    const auto head = m_game.getHeadNowPlacement();
-
-    m_scene.addEllipse(FIELD_SIZE*head.x + delta/2, FIELD_SIZE*head.y + delta/2,
                        size, size, QPen(Qt::black), QBrush(Qt::blue));
 
-    const auto tailBefore = m_game.getTailBeforePlacement();
+    const auto& head = m_game.getHeadNowPlacement();
+    drawHead(head);
 
-    if(tailBefore.x != -1)
+    const auto& tailBefore = m_game.getTailBeforePlacement();
+
+    if(tailBefore.x != -1 and tailBefore != head)
     {
         m_scene.addRect(FIELD_SIZE*tailBefore.x + delta/2, FIELD_SIZE*tailBefore.y + delta/2,
                         size, size, QPen(Qt::white), QBrush(Qt::white));
     }
+
+    const auto& headBefore = m_game.getHeadBeforePlacement();
+    if(headBefore != tailBefore)
+    {
+        m_scene.addEllipse(FIELD_SIZE*headBefore.x + delta/2, FIELD_SIZE*headBefore.y + delta/2,
+                           size, size, QPen(Qt::black), QBrush(Qt::green));
+    }
+}
+
+void MainWindow::drawHead(const Model::Point& head)
+{
+    m_scene.addEllipse(FIELD_SIZE*head.x + delta/2, FIELD_SIZE*head.y + delta/2,
+                       size, size, QPen(Qt::black), QBrush(Qt::green));
+    QPointF vertex1;
+    QPointF vertex2;
+    QPointF vertex3;
+
+    const auto direction = m_game.getDirection();
+
+    const qreal insideDelta = MainWindow::delta+2;
+    switch(direction)
+    {
+        case Model::Direction::RIGHT:
+        {
+            vertex1 = QPointF(FIELD_SIZE*head.x + insideDelta,
+                              FIELD_SIZE*head.y + insideDelta);
+            vertex2 = QPointF(FIELD_SIZE*head.x + insideDelta,
+                              FIELD_SIZE*head.y + FIELD_SIZE - insideDelta);
+            vertex3 = QPointF(FIELD_SIZE*head.x + FIELD_SIZE - insideDelta,
+                              FIELD_SIZE*head.y + FIELD_SIZE / 2);
+            break;
+        }
+        case Model::Direction::LEFT:
+        {
+            vertex1 = QPointF(FIELD_SIZE*head.x + FIELD_SIZE - insideDelta,
+                              FIELD_SIZE*head.y + insideDelta);
+            vertex2 = QPointF(FIELD_SIZE*head.x + FIELD_SIZE - insideDelta,
+                              FIELD_SIZE*head.y + FIELD_SIZE - insideDelta);
+            vertex3 = QPointF(FIELD_SIZE*head.x + insideDelta,
+                              FIELD_SIZE*head.y + FIELD_SIZE / 2);
+            break;
+        }
+        case Model::Direction::UP:
+        {
+            vertex1 = QPointF(FIELD_SIZE*head.x + insideDelta,
+                              FIELD_SIZE*head.y + FIELD_SIZE - insideDelta);
+            vertex2 = QPointF(FIELD_SIZE*head.x + FIELD_SIZE - insideDelta,
+                              FIELD_SIZE*head.y + FIELD_SIZE - insideDelta);
+            vertex3 = QPointF(FIELD_SIZE*head.x + FIELD_SIZE/2,
+                              FIELD_SIZE*head.y + insideDelta);
+            break;
+        }
+        case Model::Direction::DOWN:
+        {
+            vertex1 = QPointF(FIELD_SIZE*head.x + insideDelta,
+                              FIELD_SIZE*head.y + insideDelta);
+            vertex2 = QPointF(FIELD_SIZE*head.x + FIELD_SIZE - insideDelta,
+                              FIELD_SIZE*head.y + insideDelta);
+            vertex3 = QPointF(FIELD_SIZE*head.x + FIELD_SIZE/2,
+                              FIELD_SIZE*head.y + FIELD_SIZE - insideDelta);
+            break;
+        }
+    }
+
+    QPolygonF triangle;
+    triangle.append({vertex1, vertex2, vertex3, vertex1});
+    m_scene.addPolygon(triangle, QPen(Qt::black), QBrush(Qt::blue));
 }
 
 void MainWindow::drawGrid()

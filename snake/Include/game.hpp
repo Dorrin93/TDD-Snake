@@ -16,10 +16,12 @@ public:
     void init();
     bool nextStep();
     void changeDirection(Direction d);
+    Direction getDirection() const { return m_snake.direction(); }
 
     const Point& getBonusPlacement()      const { return m_bonus; }
     const Point& getHeadNowPlacement()    const { return m_headNow; }
     const Point& getTailBeforePlacement() const { return m_tailBefore; }
+    const Point& getHeadBeforePlacement() const { return m_headBefore; }
 
 private:
     void rollNewBonus();
@@ -29,6 +31,7 @@ private:
     IPointGenrator& m_generator;
     Point m_bonus{0, 0};
     Point m_headNow{0, 0};
+    Point m_headBefore{0, 0};
     Point m_tailBefore{0, 0};
     Direction m_bufferedDirection = Direction::RIGHT;
 };

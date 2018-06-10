@@ -31,6 +31,7 @@ public:
     void setDefaultExpectationsForNextStep()
     {
         EXPECT_CALL(m_snakeMock, setDirection(Direction::RIGHT));
+        EXPECT_CALL(m_snakeMock, head()).WillRepeatedly(ReturnRef(INITIAL_HEAD));
         EXPECT_CALL(m_snakeMock, tail()).WillRepeatedly(ReturnRef(INITIAL_HEAD));
         EXPECT_CALL(m_snakeMock, move(BORDER_DOWN_LEFT)).
                 WillRepeatedly(ReturnRef(HEAD_AFTER_MOVE));

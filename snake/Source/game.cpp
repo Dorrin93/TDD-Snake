@@ -21,6 +21,7 @@ void Game::init()
 bool Game::nextStep()
 {
     m_snake.setDirection(m_bufferedDirection);
+    m_headBefore = m_snake.head();
     m_tailBefore = m_snake.tail();
     m_headNow = m_snake.move(m_bonus);
 
