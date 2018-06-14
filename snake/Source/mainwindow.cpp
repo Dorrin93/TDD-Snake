@@ -3,13 +3,14 @@
 #include "game.hpp"
 #include <iostream>
 #include <qdebug.h>
+#include <QMessageBox>
 
 using namespace GameContants;
 
 const qreal MainWindow::delta = FIELD_SIZE / 5.;
 const qreal MainWindow::size = FIELD_SIZE - delta;
 
-MainWindow::MainWindow(Model::Game& game, QWidget *parent) :
+MainWindow::MainWindow(const Model::Game &game, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     m_game(game)
@@ -64,6 +65,30 @@ void MainWindow::redraw()
         m_scene.addEllipse(FIELD_SIZE*headBefore.x + delta/2, FIELD_SIZE*headBefore.y + delta/2,
                            size, size, QPen(Qt::black), QBrush(Qt::green));
     }
+}
+
+void MainWindow::endGame(std::chrono::seconds sec, size_t score)
+{
+    QMessageBox gameOver(this);
+
+    QString timeNoun{" second"};
+    if(sec.count() != 1)
+    {
+        timeNoun += "s";
+    }
+
+    QString pointNoun{" point"};
+    if(score != 1)
+    {
+        pointNoun += "s";
+    }
+
+    gameOver.setWindowTitle("TDD-Snake");
+    gameOver.setText("Game over!\n"
+                     "You lasted " + QString::number(sec.count()) + timeNoun +
+                     ", and collected " + QString::number(score) + pointNoun + ".");
+    gameOver.exec();
+    QApplication::quit();
 }
 
 void MainWindow::drawHead(const Model::Point& head)

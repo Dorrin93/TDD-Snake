@@ -18,6 +18,8 @@ public:
     void changeDirection(Direction d);
     Direction getDirection() const { return m_snake.direction(); }
 
+    size_t getSnakeSize() const { return m_snake.size(); }
+
     const Point& getBonusPlacement()      const { return m_bonus; }
     const Point& getHeadNowPlacement()    const { return m_headNow; }
     const Point& getTailBeforePlacement() const { return m_tailBefore; }

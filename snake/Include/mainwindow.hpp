@@ -5,6 +5,7 @@
 #include <QGraphicsScene>
 #include "constants.hpp"
 #include <QKeyEvent>
+#include <chrono>
 #include "snake.hpp"
 
 namespace Ui
@@ -22,11 +23,12 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(Model::Game& game, QWidget *parent = 0);
+    explicit MainWindow(const Model::Game& game, QWidget *parent = 0);
     ~MainWindow();
 
 public slots:
     void redraw();
+    void endGame(std::chrono::seconds, size_t);
 
 signals:
     void directionChanged(Model::Direction);
@@ -39,7 +41,7 @@ private:
 
     Ui::MainWindow *ui;
     QGraphicsScene m_scene;
-    Model::Game& m_game;
+    const Model::Game& m_game;
 
     static const qreal delta;
     static const qreal size;

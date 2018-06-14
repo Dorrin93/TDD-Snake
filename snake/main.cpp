@@ -20,6 +20,8 @@ int main(int argc, char *argv[])
     controller.start();
     MainWindow window(game);
     QObject::connect(&controller, SIGNAL(updateDone()), &window, SLOT(redraw()));
+    QObject::connect(&controller, SIGNAL(gameEnd(std::chrono::seconds, size_t)),
+                     &window, SLOT(endGame(std::chrono::seconds, size_t)));
     QObject::connect(&window, SIGNAL(directionChanged(Model::Direction)),
                      &controller, SLOT(changeDirection(Model::Direction)));
 

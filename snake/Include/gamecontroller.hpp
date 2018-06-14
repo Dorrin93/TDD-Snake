@@ -1,6 +1,7 @@
 #pragma once
 #include <QObject>
 #include <QTimer>
+#include <chrono>
 #include "constants.hpp"
 #include "grid.hpp"
 #include "game.hpp"
@@ -18,17 +19,20 @@ public:
     {}
 
     void start();
+
 public slots:
     void changeDirection(Model::Direction);
     void update();
 
 signals:
     void updateDone();
-    void gameEnd();
+    void gameEnd(std::chrono::seconds, size_t);
 
 private:
     QTimer m_timer;
     Model::Game& m_game;
+
+    std::chrono::steady_clock::time_point m_startTime;
 };
 
 }

@@ -16,7 +16,6 @@ something similar to game main loop (Qtimer triggers next game step).
 Single Qt MainWindow class. Takes data directly from model, but don't modify it.
 
 ## TODO
- - Game Over popup
- - Point and time counting
+ - Play again button
  - Scoreboard
  - Initial screen with parameters modification (will replace constants.hpp)
