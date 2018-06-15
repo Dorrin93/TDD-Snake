@@ -73,3 +73,15 @@ INSTANTIATE_TEST_CASE_P(OutOfBoundPoints,
                         Values(Point{2, 0}, Point{0, 3},
                                Point{2, 1}, Point{1, 3},
                                Point{2, 3}, Point{2, 3}));
+
+TEST_F(GridTest, shouldSetPointsToEmptyWhenReset)
+{
+    const Point point1{1, 0};
+    const Point point2{0, 2};
+    m_objectUnderTest.setPointType(point1, PointType::SNAKE);
+    m_objectUnderTest.setPointType(point2, PointType::SNAKE);
+
+    m_objectUnderTest.reset();
+    ASSERT_EQ(m_objectUnderTest.getPointType(point1), PointType::EMPTY);
+    ASSERT_EQ(m_objectUnderTest.getPointType(point2), PointType::EMPTY);
+}

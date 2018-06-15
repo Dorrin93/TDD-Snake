@@ -13,14 +13,12 @@ class GameController : public QObject
 {
     Q_OBJECT
 public:
-    GameController(Model::Game& game, QObject* parent = nullptr):
-        QObject(parent),
-        m_game(game)
-    {}
+    GameController(Model::Game& game, QObject* parent = nullptr);
 
     void start();
 
 public slots:
+    void restart();
     void changeDirection(Model::Direction);
     void update();
 

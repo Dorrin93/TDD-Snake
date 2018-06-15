@@ -22,6 +22,8 @@ public:
     virtual void setDirection(Direction) = 0;
 
     virtual size_t size() const = 0;
+
+    virtual void reset(const Point&) = 0;
 };
 
 class Snake: public ISnake
@@ -38,6 +40,8 @@ public:
     void setDirection(Direction d) override;
 
     size_t size() const override;
+
+    void reset(const Point& head) override;
 
 private:
     void enlarge();

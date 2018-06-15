@@ -24,6 +24,8 @@ int main(int argc, char *argv[])
                      &window, SLOT(endGame(std::chrono::seconds, size_t)));
     QObject::connect(&window, SIGNAL(directionChanged(Model::Direction)),
                      &controller, SLOT(changeDirection(Model::Direction)));
+    QObject::connect(&window, SIGNAL(restartChosen()),
+                     &controller, SLOT(restart()));
 
     window.show();
 

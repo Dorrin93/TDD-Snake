@@ -61,6 +61,12 @@ size_t Snake::size() const
     return m_body.size();
 }
 
+void Snake::reset(const Point &head)
+{
+    m_body = {head};
+    m_direction = Direction::RIGHT;
+}
+
 void Snake::enlarge()
 {
     const auto& head = m_body.front();
@@ -73,7 +79,7 @@ bool Snake::isOposite(Direction d)
     return (m_direction == Direction::LEFT and d == Direction::RIGHT) or
            (m_direction == Direction::RIGHT and d == Direction::LEFT) or
            (m_direction == Direction::UP and d == Direction::DOWN) or
-            (m_direction == Direction::DOWN and d == Direction::UP);
+           (m_direction == Direction::DOWN and d == Direction::UP);
 }
 
 }

@@ -12,6 +12,7 @@ public:
     MOCK_CONST_METHOD1(getPointType, PointType(const Point&));
     MOCK_CONST_METHOD0(rows, size_t());
     MOCK_CONST_METHOD0(cols, size_t());
+    MOCK_METHOD0(reset, void());
 };
 
 }

@@ -14,6 +14,7 @@ public:
     MOCK_CONST_METHOD0(direction, Direction());
     MOCK_METHOD1(setDirection, void(Direction));
     MOCK_CONST_METHOD0(size, size_t());
+    MOCK_METHOD1(reset, void(const Point&));
 };
 
 }

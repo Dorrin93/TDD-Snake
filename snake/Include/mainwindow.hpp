@@ -32,8 +32,10 @@ public slots:
 
 signals:
     void directionChanged(Model::Direction);
+    void restartChosen();
 
 private:
+    void prepareScene();
     void drawHead(const Model::Point&);
     void drawGrid();
     void drawWalls();

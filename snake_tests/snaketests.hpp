@@ -114,3 +114,17 @@ TEST_F(SnakeTest, shouldNotTurnOpositeWithSizeGreaterThanOne)
     ASSERT_EQ(m_objectUnderTest.head(), head);
     ASSERT_EQ(m_objectUnderTest.tail(), tail);
 }
+
+TEST_F(SnakeTest, shouldBeOnlyHeadAndDirectRightWhenReset)
+{
+    Point headAfterMove{INITIAL_HEAD.x, INITIAL_HEAD.y+1};
+    m_objectUnderTest.setDirection(Direction::DOWN);
+    m_objectUnderTest.move(headAfterMove);
+
+    Point headNewPlacement{0, 0};
+    m_objectUnderTest.reset(headNewPlacement);
+
+    ASSERT_EQ(m_objectUnderTest.head(), headNewPlacement);
+    ASSERT_EQ(m_objectUnderTest.size(), 1u);
+    ASSERT_EQ(m_objectUnderTest.direction(), Direction::RIGHT);
+}

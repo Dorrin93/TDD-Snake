@@ -54,6 +54,17 @@ void Game::changeDirection(Direction d)
     m_bufferedDirection = d;
 }
 
+void Game::reset(const Point &snakeHead)
+{
+    m_grid.reset();
+    m_snake.reset(snakeHead);
+    m_headBefore = {0, 0};
+    m_tailBefore = {0, 0};
+    m_bufferedDirection = Direction::RIGHT;
+
+    init();
+}
+
 void Game::rollNewBonus()
 {
     auto point = m_generator.getRandomPoint();

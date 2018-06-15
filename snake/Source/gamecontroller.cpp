@@ -6,12 +6,24 @@ namespace Controller
 
 using namespace std::chrono;
 
+GameController::GameController(Model::Game &game, QObject *parent):
+    QObject(parent),
+    m_game(game)
+{
+    connect(&m_timer, SIGNAL(timeout()), this, SLOT(update()));
+}
+
 void GameController::start()
 {
     m_game.init();
-    connect(&m_timer, SIGNAL(timeout()), this, SLOT(update()));
     m_timer.start(GameContants::TIMEOUT);
     m_startTime = steady_clock::now();
+}
+
+void GameController::restart()
+{
+    m_game.reset({GameContants::COLS/2, GameContants::ROWS/2});
+    start();
 }
 
 void GameController::changeDirection(Model::Direction d)

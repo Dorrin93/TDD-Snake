@@ -24,4 +24,9 @@ PointType Grid::getPointType(const Point &p) const
     return m_points.get(p.x, p.y);
 }
 
+void Grid::reset()
+{
+    m_points.fill(PointType::EMPTY);
+}
+
 }

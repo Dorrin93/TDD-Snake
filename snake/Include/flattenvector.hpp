@@ -31,6 +31,11 @@ public:
         return m_values[x + y*m_cols];
     }
 
+    void fill(const T& value)
+    {
+        std::fill(std::begin(m_values), std::end(m_values), value);
+    }
+
 private:
     const size_t m_cols;
     const size_t m_rows;

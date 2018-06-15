@@ -25,6 +25,8 @@ public:
     const Point& getTailBeforePlacement() const { return m_tailBefore; }
     const Point& getHeadBeforePlacement() const { return m_headBefore; }
 
+    void reset(const Point& snakeHead);
+
 private:
     void rollNewBonus();
 

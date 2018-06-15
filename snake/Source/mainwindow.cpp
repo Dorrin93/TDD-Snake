@@ -4,6 +4,7 @@
 #include <iostream>
 #include <qdebug.h>
 #include <QMessageBox>
+#include <QPushButton>
 
 using namespace GameContants;
 
@@ -27,12 +28,7 @@ MainWindow::MainWindow(const Model::Game &game, QWidget *parent) :
     ui->graphicsView->setFixedSize(FULL_COLS_SIZE,
                                    FULL_ROW_SIZE);
 
-    drawWalls();
-    if(GameContants::DRAW_GRID)
-    {
-        drawGrid();
-    }
-
+    prepareScene();
     redraw();
 }
 
@@ -70,6 +66,8 @@ void MainWindow::redraw()
 void MainWindow::endGame(std::chrono::seconds sec, size_t score)
 {
     QMessageBox gameOver(this);
+    QPushButton *restart = gameOver.addButton(tr("Restart"), QMessageBox::YesRole);
+    QPushButton *quit = gameOver.addButton(tr("Quit"), QMessageBox::NoRole);
 
     QString timeNoun{" second"};
     if(sec.count() != 1)
@@ -87,8 +85,30 @@ void MainWindow::endGame(std::chrono::seconds sec, size_t score)
     gameOver.setText("Game over!\n"
                      "You lasted " + QString::number(sec.count()) + timeNoun +
                      ", and collected " + QString::number(score) + pointNoun + ".");
+
     gameOver.exec();
-    QApplication::quit();
+
+    if(gameOver.clickedButton() == restart)
+    {
+        emit restartChosen();
+        m_scene.clear();
+        prepareScene();
+        redraw();
+    }
+    else if(gameOver.clickedButton() == quit)
+    {
+        QApplication::quit();
+    }
+
+}
+
+void MainWindow::prepareScene()
+{
+    drawWalls();
+    if(GameContants::DRAW_GRID)
+    {
+        drawGrid();
+    }
 }
 
 void MainWindow::drawHead(const Model::Point& head)
