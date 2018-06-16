@@ -31,7 +31,8 @@ SOURCES += \
     Source/grid.cpp \
     Source/mainwindow.cpp \
     Source/snake.cpp \
-    Source/pointgenerator.cpp
+    Source/pointgenerator.cpp \
+    Source/scoreboard.cpp
 
 HEADERS += \
     Include/constants.hpp \
@@ -42,7 +43,9 @@ HEADERS += \
     Include/mainwindow.hpp \
     Include/snake.hpp \
     Include/point.hpp \
-    Include/pointgenerator.hpp
+    Include/pointgenerator.hpp \
+    Include/scoreboard.hpp
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    scoreboard.ui

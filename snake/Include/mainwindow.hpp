@@ -7,6 +7,7 @@
 #include <QKeyEvent>
 #include <chrono>
 #include "snake.hpp"
+#include "scoreboard.hpp"
 
 namespace Ui
 {
@@ -43,6 +44,7 @@ private:
 
     Ui::MainWindow *ui;
     QGraphicsScene m_scene;
+    ScoreBoard m_scores;
     const Model::Game& m_game;
 
     static const qreal delta;

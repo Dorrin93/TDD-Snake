@@ -14,6 +14,7 @@ const qreal MainWindow::size = FIELD_SIZE - delta;
 MainWindow::MainWindow(const Model::Game &game, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    m_scores(this),
     m_game(game)
 {
     ui->setupUi(this);
@@ -65,6 +66,7 @@ void MainWindow::redraw()
 
 void MainWindow::endGame(std::chrono::seconds sec, size_t score)
 {
+/*
     QMessageBox gameOver(this);
     QPushButton *restart = gameOver.addButton(tr("Restart"), QMessageBox::YesRole);
     QPushButton *quit = gameOver.addButton(tr("Quit"), QMessageBox::NoRole);
@@ -87,19 +89,21 @@ void MainWindow::endGame(std::chrono::seconds sec, size_t score)
                      ", and collected " + QString::number(score) + pointNoun + ".");
 
     gameOver.exec();
+*/
 
-    if(gameOver.clickedButton() == restart)
+    int result = m_scores.exec();
+
+    if(result == Result::RESTART)
     {
         emit restartChosen();
         m_scene.clear();
         prepareScene();
         redraw();
     }
-    else if(gameOver.clickedButton() == quit)
+    else if(result == Result::QUIT)
     {
         QApplication::quit();
     }
-
 }
 
 void MainWindow::prepareScene()
