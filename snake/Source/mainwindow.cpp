@@ -5,6 +5,7 @@
 #include <qdebug.h>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QInputDialog>
 
 using namespace GameContants;
 
@@ -66,11 +67,6 @@ void MainWindow::redraw()
 
 void MainWindow::endGame(std::chrono::seconds sec, size_t score)
 {
-/*
-    QMessageBox gameOver(this);
-    QPushButton *restart = gameOver.addButton(tr("Restart"), QMessageBox::YesRole);
-    QPushButton *quit = gameOver.addButton(tr("Quit"), QMessageBox::NoRole);
-
     QString timeNoun{" second"};
     if(sec.count() != 1)
     {
@@ -83,13 +79,27 @@ void MainWindow::endGame(std::chrono::seconds sec, size_t score)
         pointNoun += "s";
     }
 
-    gameOver.setWindowTitle("TDD-Snake");
-    gameOver.setText("Game over!\n"
-                     "You lasted " + QString::number(sec.count()) + timeNoun +
-                     ", and collected " + QString::number(score) + pointNoun + ".");
+    QInputDialog nameInput(this, Qt::WindowSystemMenuHint |
+                                 Qt::WindowTitleHint |
+                                 Qt::MSWindowsFixedSizeDialogHint);
+    nameInput.setWindowTitle(tr("Game Over!"));
+    nameInput.setLabelText("You lasted " + QString::number(sec.count()) + timeNoun +
+                           ", and collected " + QString::number(score) + pointNoun +
+                           ".\nUser name:");
+    nameInput.setInputMode(QInputDialog::TextInput);
+    nameInput.setTextValue("Anon");
+    nameInput.setCancelButtonText(tr("Quit"));
+    bool nameResult = nameInput.exec();
 
-    gameOver.exec();
-*/
+    if(!nameResult)
+    {
+        QApplication::quit();
+    }
+    else
+    {
+        QString name = nameInput.textValue();
+        m_scores.addScore(name, score, sec.count());
+    }
 
     int result = m_scores.exec();
 
