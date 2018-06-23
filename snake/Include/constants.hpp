@@ -1,18 +1,37 @@
 #pragma once
 #include <cstddef>
 
-namespace GameContants
+class GameContants
 {
+public:
+    static size_t& ROWS()
+    {
+        static size_t rows = 12;
+        return rows;
+    }
 
-constexpr size_t ROWS = 10;
-constexpr size_t COLS = 15;
-constexpr size_t FIELD_SIZE = 40;
+    static size_t& COLS()
+    {
+        static size_t cols = 16;
+        return cols;
+    }
 
-constexpr size_t FULL_ROW_SIZE = ROWS*FIELD_SIZE;
-constexpr size_t FULL_COLS_SIZE = COLS*FIELD_SIZE;
+    static size_t& FIELD_SIZE()
+    {
+        static size_t fieldSize = 50;
+        return fieldSize;
+    }
 
-constexpr unsigned TIMEOUT = 300;
+    static unsigned& TIMEOUT()
+    {
+        static unsigned timeout = 500;
+        return timeout;
+    }
 
-constexpr bool DRAW_GRID = true;
+    static bool& DRAW_GRID()
+    {
+        static bool drawGrid = false;
+        return drawGrid;
+    }
 
-}
+};

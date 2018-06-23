@@ -47,8 +47,11 @@ private:
     ScoreBoard m_scores;
     const Model::Game& m_game;
 
-    static const qreal delta;
-    static const qreal size;
+    const size_t m_fieldSize;
+    const qreal m_delta;
+    const qreal m_size;
+    const size_t m_fullRowSize;
+    const size_t m_fullColsSize;
 };
 
 #endif // MAINWINDOW_H

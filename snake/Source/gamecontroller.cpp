@@ -16,13 +16,13 @@ GameController::GameController(Model::Game &game, QObject *parent):
 void GameController::start()
 {
     m_game.init();
-    m_timer.start(GameContants::TIMEOUT);
+    m_timer.start(GameContants::TIMEOUT());
     m_startTime = steady_clock::now();
 }
 
 void GameController::restart()
 {
-    m_game.reset({GameContants::COLS/2, GameContants::ROWS/2});
+    m_game.reset();
     start();
 }
 

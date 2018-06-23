@@ -3,19 +3,32 @@
 #include "game.hpp"
 #include "grid.hpp"
 #include "gamecontroller.hpp"
+#include "settingsscreen.hpp"
 
+namespace
+{
+
+int toInt(size_t value)
+{
+    return static_cast<int>(value);
+}
+
+}
 int main(int argc, char *argv[])
 {
-    static_assert(GameContants::FIELD_SIZE > 10, "FIELD_SIZE must be 10 pixels or more");
+    QApplication a(argc, argv);
 
-    Model::Grid grid(GameContants::COLS, GameContants::ROWS);
-    Model::Snake snake({GameContants::COLS/2, GameContants::ROWS/2});
-    Model::PointGenerator generator(GameContants::COLS-1, GameContants::ROWS-1);
+    SettingsScreen test;
+
+    test.exec();
+
+    Model::Grid grid(GameContants::COLS(), GameContants::ROWS());
+    Model::Snake snake({toInt(GameContants::COLS())/2, toInt(GameContants::ROWS())/2});
+    Model::PointGenerator generator(GameContants::COLS()-1, GameContants::ROWS()-1);
     Model::Game game(grid, snake, generator);
 
     Controller::GameController controller(game);
 
-    QApplication a(argc, argv);
 
     controller.start();
     MainWindow window(game);

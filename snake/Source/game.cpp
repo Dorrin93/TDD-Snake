@@ -54,10 +54,10 @@ void Game::changeDirection(Direction d)
     m_bufferedDirection = d;
 }
 
-void Game::reset(const Point &snakeHead)
+void Game::reset()
 {
+    m_snake.reset({m_grid.cols()/2, m_grid.rows()/2});
     m_grid.reset();
-    m_snake.reset(snakeHead);
     m_headBefore = {0, 0};
     m_tailBefore = {0, 0};
     m_bufferedDirection = Direction::RIGHT;
