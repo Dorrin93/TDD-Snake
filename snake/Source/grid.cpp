@@ -4,12 +4,12 @@
 namespace Model
 {
 
-Grid::Grid(unsigned size):
+Grid::Grid(size_t size):
     m_cols(size), m_rows(size),
     m_points(m_cols, m_rows, PointType::EMPTY)
 {}
 
-Grid::Grid(unsigned cols, unsigned rows):
+Grid::Grid(size_t cols, size_t rows):
     m_cols(cols), m_rows(rows),
     m_points(m_cols, m_rows, PointType::EMPTY)
 {}
